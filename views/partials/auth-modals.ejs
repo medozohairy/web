@@ -1,0 +1,215 @@
+<!-- Login Modal -->
+<div
+  class="modal fade"
+  id="loginModal"
+  tabindex="-1"
+  aria-labelledby="loginModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">
+          <i class="fas fa-sign-in-alt me-2"></i>Login
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm">
+          <div class="mb-3">
+            <label for="loginEmail" class="form-label">Email address</label>
+            <input type="text" class="form-control" id="loginEmail" />
+          </div>
+          <div class="mb-3">
+            <label for="loginPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="loginPassword" />
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe" />
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+        <div class="text-center mt-3">
+          <p class="mb-0">
+            Don't have an account?
+            <a
+              href="#"
+              data-bs-toggle="modal"
+              data-bs-target="#signupModal"
+              data-bs-dismiss="modal"
+              >Sign up</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document
+    .getElementById("loginForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const response = await fetch("/api/user/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("Login successful");
+          window.location.href = `/${data.role}`;
+        } else {
+          alert(data.errors);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+      }
+    });
+</script>
+
+<!-- Signup Modal -->
+<div
+  class="modal fade"
+  id="signupModal"
+  tabindex="-1"
+  aria-labelledby="signupModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signupModalLabel">
+          <i class="fas fa-user-plus me-2"></i>Sign Up
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="signupForm">
+          <div class="mb-3">
+            <label for="signupName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="signupName" />
+          </div>
+          <div class="mb-3">
+            <label for="signupEmail" class="form-label">Email address</label>
+            <input type="text" class="form-control" id="signupEmail" />
+          </div>
+          <div class="mb-3">
+            <label for="signupPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="signupPassword" />
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label"
+              >Confirm Password</label
+            >
+            <input type="password" class="form-control" id="confirmPassword" />
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="termsCheck" />
+            <label class="form-check-label" for="termsCheck"
+              >I agree to the <a href="#">Terms and Conditions</a></label
+            >
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </div>
+        </form>
+        <div class="text-center mt-3">
+          <p class="mb-0">
+            Already have an account?
+            <a
+              href="#"
+              data-bs-toggle="modal"
+              data-bs-target="#loginModal"
+              data-bs-dismiss="modal"
+              >Login</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("signupForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const name = document.getElementById("signupName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      // Validate name
+      if (name.trim().length < 2) {
+        alert("Name must be at least 2 characters long");
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address");
+        return;
+      }
+
+      // Validate password
+      if (password.length < 6 || password.length > 18) {
+        alert("Password must be between 6 and 18 characters long");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+      }
+      if (!termsCheck) {
+        alert("You must agree to the terms and conditions");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/user/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const data = await response.json();
+
+
+        if (response.ok) {
+          alert("Signup successful");
+          window.location.href = "/";
+        } else {
+          alert(data.errors);
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        alert("An error occurred while signing up. Please try again later.");
+      }
+    });
+</script>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClothHouse - About Us</title>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+
+    <!-- About Hero Section -->
+    <section class="about-hero">
+      <div class="container">
+        <h1 class="display-4 mb-4">Our Story</h1>
+        <p class="lead">Discover the journey of ClothHouse and our passion for fashion</p>
+      </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section py-5">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="mission-content">
+              <h2 class="section-title text-start">Our Mission</h2>
+              <p class="lead mb-4">To inspire and connect people through the power of style.</p>
+              <p>At ClothHouse, we believe that fashion has the power to transform lives. Our mission is to create a welcoming space where people can discover new styles, explore different trends, and connect with clothing that resonates with their personal style.</p>
+              <div class="mission-stats mt-5">
+                <div class="row">
+                  <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                      <h3>10K+</h3>
+                      <p>Clothing Items</p>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                      <h3>5K+</h3>
+                      <p>Customers</p>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                      <h3>100+</h3>
+                      <p>Brands</p>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                      <h3>50+</h3>
+                      <p>Categories</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="mission-image">
+              <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop" alt="ClothHouse Store" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section py-5 bg-light">
+      <div class="container">
+        <h2 class="section-title">Our Values</h2>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="value-card">
+              <i class="fas fa-tshirt"></i>
+              <h3>Style Excellence</h3>
+              <p>We curate our collection with care, ensuring every piece meets our high standards of quality and fashion.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="value-card">
+              <i class="fas fa-users"></i>
+              <h3>Community</h3>
+              <p>We foster a vibrant community of fashion enthusiasts who share their passion for style and trends.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="value-card">
+              <i class="fas fa-heart"></i>
+              <h3>Customer First</h3>
+              <p>Your satisfaction is our priority. We go above and beyond to ensure you find the perfect outfit.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section py-5">
+      <div class="container">
+        <h2 class="section-title">Meet Our Team</h2>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face" alt="John Doe" class="team-image">
+              <div class="team-info">
+                <h4>John Doe</h4>
+                <p class="position">Founder & CEO</p>
+                <p class="bio">Passionate about fashion and community building, John founded ClothHouse with a vision to create a haven for style lovers.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face"" alt="Jane Smith" class="team-image">
+              <div class="team-info">
+                <h4>Jane Smith</h4>
+                <p class="position">Fashion Director</p>
+                <p class="bio">With over 10 years in the fashion industry, Jane brings her expertise to curate the perfect collections for our customers.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face" alt="Mike Johnson" class="team-image">
+              <div class="team-info">
+                <h4>Mike Johnson</h4>
+                <p class="position">Operations Manager</p>
+                <p class="bio">Mike ensures that every aspect of our business runs smoothly, from inventory to customer service.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section py-5 bg-light">
+      <div class="container">
+        <h2 class="section-title">Our Journey</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <h4>2020</h4>
+              <p>ClothHouse was founded with a small collection of 1,000 clothing items</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <h4>2021</h4>
+              <p>Expanded to include online shopping and reached 1,000 customers</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <h4>2022</h4>
+              <p>Launched our mobile app and introduced exclusive designer collections</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <h4>2023</h4>
+              <p>Reached 5,000 customers and expanded to multiple locations</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-content">
+              <h4>2024</h4>
+              <p>Continuing to grow and innovate in the fashion industry</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html> 

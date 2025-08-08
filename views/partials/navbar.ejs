@@ -1,0 +1,288 @@
+<nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-tshirt me-2"></i>ClothHouse
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item mx-1">
+          <a class="nav-link" href="/">
+            <i class="fas fa-compass me-1"></i>Explore
+          </a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link" href="/about-us">
+            <i class="fas fa-info-circle me-1"></i>About Us
+          </a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link" href="/contact-us">
+            <i class="fas fa-envelope me-1"></i>Contact Us
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <ul class="navbar-nav ms-auto">
+      <% if (user) { %>
+      <li class="nav-item me-2">
+        <button
+          class="btn border-0 mt-1"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"
+        >
+          <i class="fas fa-shopping-cart me-1"></i>
+          Cart
+          <span class="badge bg-primary"><%= user.cart.items.length %></span>
+        </button>
+      </li>
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="profileDropdown"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i class="fas fa-user me-1"></i><%= user.name || 'Profile' %>
+        </a>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="profileDropdown"
+        >
+          <li>
+            <a class="dropdown-item" href="/profile">
+              <i class="fas fa-user-circle me-1"></i>My Profile
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a class="dropdown-item" href="/api/user/logout">
+              <i class="fas fa-sign-out-alt me-1"></i>Logout
+            </a>
+          </li>
+        </ul>
+      </li>
+      <% } else { %>
+      <li class="nav-item">
+        <button
+          class="btn btn-outline-primary btn-sm me-2"
+          data-bs-toggle="modal"
+          data-bs-target="#loginModal"
+        >
+          <i class="fas fa-sign-in-alt me-1"></i>Login
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="btn btn-primary btn-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#signupModal"
+        >
+          <i class="fas fa-user-plus me-1"></i>Sign Up
+        </button>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+</nav>
+
+<!-- Offcanvas Cart Panel -->
+<div
+  class="offcanvas offcanvas-end"
+  tabindex="-1"
+  id="offcanvasRight"
+  aria-labelledby="offcanvasRightLabel"
+>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasRightLabel">Cart</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  <div class="offcanvas-body d-flex flex-column">
+    <% if (user && user.cart && user.cart.items.length > 0) { %> <% let total =
+    0; %> <% user.cart.items.forEach(item => { const cloth = item.cloth; const
+    subtotal = cloth.price * item.quantity; total += subtotal; %>
+    <div
+      class="d-flex align-items-center border-bottom py-3"
+      data-cloth-id="<%= cloth._id %>"
+    >
+      <img
+        src="<%= cloth.image %>"
+        alt="Product"
+        class="img-thumbnail me-3"
+        style="width: 80px; height: 80px"
+      />
+      <div class="flex-grow-1">
+        <h6 class="mb-1"><%= cloth.title %></h6>
+        <div class="d-flex align-items-center">
+          <button
+            class="btn btn-outline-secondary btn-sm me-2 btn-decrease"
+            data-cloth-id="<%= cloth._id %>"
+            data-action="minus"
+          >
+            -
+          </button>
+          <span class="item-quantity"><%= item.quantity %></span>
+          <button
+            class="btn btn-outline-secondary btn-sm ms-2 btn-increase"
+            data-cloth-id="<%= cloth._id %>"
+            data-action="plus"
+          >
+            +
+          </button>
+        </div>
+      </div>
+      <div class="ms-3">
+        <strong class="item-price">$<%= subtotal.toFixed(2) %></strong>
+      </div>
+    </div>
+    <% }); %>
+
+    <div class="flex-grow-1"></div>
+
+    <div class="border-top pt-3">
+      <div class="d-flex justify-content-between mb-3">
+        <strong>Total:</strong>
+        <strong class="total-price">$<%= total.toFixed(2) %></strong>
+      </div>
+      <button class="btn btn-primary w-100" id="checkout">Checkout</button>
+    </div>
+
+    <% } else { %>
+    <p class="text-muted">Your cart is empty.</p>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  document
+    .querySelectorAll(".btn-increase, .btn-decrease")
+    .forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        const btn = event.currentTarget;
+        const clothId = btn.getAttribute("data-cloth-id");
+        const action = btn.getAttribute("data-action"); // "plus" or "minus"
+        btn.disabled = true;
+
+        try {
+          const res = await fetch(`/api/user/cart/${clothId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ btn_type: action }),
+          });
+
+          const data = await res.json();
+
+          if (data.error) {
+            showToast({ text: data.error, type: "error" });
+            return;
+          }
+
+          const updatedCart = data.cart;
+
+          // Update this item if it still exists
+          const updatedItem = updatedCart.items.find(
+            (item) => item.cloth._id === clothId || item.cloth === clothId
+          );
+
+          const cartItemElem = document.querySelector(
+            `.d-flex.align-items-center.border-bottom.py-3[data-cloth-id="${clothId}"]`
+          );
+
+          if (updatedItem) {
+            // Update quantity
+            cartItemElem.querySelector(".item-quantity").textContent =
+              updatedItem.quantity;
+
+            // Update subtotal
+            cartItemElem.querySelector(
+              ".item-price"
+            ).textContent = `$${updatedItem.price.toFixed(2)}`;
+          } else {
+            // Item was removed (quantity = 0)
+            if (cartItemElem) cartItemElem.remove();
+          }
+
+          // Update total price
+          document.querySelector(
+            ".total-price"
+          ).textContent = `$${updatedCart.totalPrice.toFixed(2)}`;
+
+          // If cart is empty now, show message
+          if (updatedCart.items.length === 0) {
+            document.querySelector(
+              ".offcanvas-body"
+            ).innerHTML = `<p class="text-muted">Your cart is empty.</p>`;
+          }
+
+          showToast({ text: data.message, type: "success" });
+        } catch (error) {
+          console.error("Fetch error:", error);
+          showToast({
+            text: "An error occurred while updating the cart.",
+            type: "error",
+          });
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+
+  // Add event listener for checkout button
+  const checkoutBtn = document.getElementById("checkout");
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", async function () {
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = "Processing...";
+      try {
+        const response = await fetch("/api/order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert("Order placed successfully!");
+          location.reload();
+        } else {
+          alert(
+            data.message ||
+              (data.errors && data.errors[0]?.msg) ||
+              "Order failed"
+          );
+        }
+      } catch (err) {
+        alert("An error occurred while placing the order.");
+      } finally {
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = "Checkout";
+      }
+    });
+  }
+</script>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClothHouse - Contact Us</title>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+
+    <!-- Contact Hero Section -->
+    <section class="contact-hero">
+      <div class="container">
+        <h1 class="display-4 mb-4">Get in Touch</h1>
+        <p class="lead">
+          We'd love to hear from you. Send us a message and we'll respond as
+          soon as possible.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact Information Section -->
+    <section class="py-5">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="contact-info-card text-center">
+              <i class="fas fa-map-marker-alt"></i>
+              <h4>Visit Us</h4>
+              <p>
+                123 Fashion Street<br />Style City, SC 12345<br />United States
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="contact-info-card text-center">
+              <i class="fas fa-phone"></i>
+              <h4>Call Us</h4>
+              <p>+1 (555) 123-4567<br />+1 (555) 987-6543</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="contact-info-card text-center">
+              <i class="fas fa-envelope"></i>
+              <h4>Email Us</h4>
+              <p>info@clothhouse.com<br />support@clothhouse.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="py-5 bg-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="contact-form">
+              <h3 class="mb-4">Send Us a Message</h3>
+              <form id="contactForm">
+                <div class="row">
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" name="name" placeholder="Your Name" required>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                  </div>
+                </div>
+                <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                <textarea class="form-control" name="message" rows="5" placeholder="Your Message" required></textarea>
+                <div id="formMessage" class="alert d-none mb-3"></div>
+                <button type="submit" class="btn btn-primary btn-submit">
+                  <span class="button-text">Send Message</span>
+                  <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="map-container">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.30591910525!2d-74.25986432970718!3d40.697149422113014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1647043087964!5m2!1sen!2s" 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy">
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section class="py-5">
+      <div class="container text-center">
+        <h3 class="mb-4">Follow Us</h3>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Contact Form Script -->
+    <script>
+      document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const form = this;
+        const submitBtn = form.querySelector('.btn-submit');
+        const buttonText = submitBtn.querySelector('.button-text');
+        const spinner = submitBtn.querySelector('.spinner-border');
+        const messageDiv = document.getElementById('formMessage');
+        
+        // Show loading state
+        buttonText.classList.add('d-none');
+        spinner.classList.remove('d-none');
+        submitBtn.disabled = true;
+        messageDiv.classList.add('d-none');
+        
+        // Simulate form submission
+        setTimeout(() => {
+          // Show success message
+          messageDiv.className = 'alert alert-success mb-3';
+          messageDiv.textContent = 'Thank you for your message! We\'ll get back to you soon.';
+          messageDiv.classList.remove('d-none');
+          
+          // Reset form
+          form.reset();
+          
+          // Reset button state
+          buttonText.classList.remove('d-none');
+          spinner.classList.add('d-none');
+          submitBtn.disabled = false;
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClothHouse - Home</title>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h1>Welcome to ClothHouse</h1>
+            <p class="lead">
+              Discover the latest trends in fashion and style. Find your perfect
+              outfit among our carefully curated collection of clothing and
+              accessories.
+            </p>
+            <a href="#featured-clothes" class="cta-button"
+              >Explore Our Collection</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="scroll-indicator" onclick="scrollToClothes()">
+        <i class="fas fa-chevron-down fa-2x"></i>
+      </div>
+    </section>
+
+    <!-- Featured Clothes Section -->
+    <section class="featured-clothes py-5" id="featured-clothes">
+      <div class="container">
+        <h2 class="section-title">Explore Our Collection</h2>
+
+        <!-- Search and Filter Bar -->
+        <div class="search-filter-container mb-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="fas fa-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchInput"
+                  placeholder="Search for clothes, categories, or styles..."
+                />
+                <button class="btn btn-primary" type="button" id="searchBtn">
+                  Search
+                </button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" id="categoryFilter">
+                <option value="all">Filter by Category</option>
+                <option value="Shirts">Shirts</option>
+                <option value="Pants">Pants</option>
+                <option value="Dresses">Dresses</option>
+                <option value="Outerwear">Outerwear</option>
+                <option value="Underwear">Underwear</option>
+                <option value="Socks">Socks</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Shoes">Shoes</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button
+                class="btn btn-outline-secondary w-100"
+                id="clearFiltersBtn"
+              >
+                <i class="fas fa-times me-1"></i>Clear Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clothes Grid -->
+        <div class="row" id="clothesGrid">
+          <% clothes.forEach(cloth => { %>
+          <div class="col-lg-3 col-md-4 col-sm-6 mb-4 cloth-item">
+            <div
+              class="cloth-card p-0"
+              data-category="<%= cloth.category.toLowerCase() %>"
+              data-title="<%= cloth.title.toLowerCase() %>"
+              data-price="<%= cloth.price %>"
+              style="overflow: hidden"
+            >
+              <span class="category-label"><%= cloth.category %></span>
+              <a
+                href="javascript:void(0);"
+                onclick="openClothModal('<%= cloth.title %>', '<%= cloth.category %>', '<%= cloth.price %>', '<%= cloth.image %>', '<%= cloth._id %>')"
+              >
+                <img
+                  src="<%= cloth.image %>"
+                  alt="Clothing Item"
+                  style="
+                    width: 100%;
+                    height: 250px;
+                    object-fit: cover;
+                    display: block;
+                    border-radius: 0;
+                  "
+                />
+              </a>
+              <div class="card-body">
+                <h5><%= cloth.title %></h5>
+                <p class="price">$<%= cloth.price %></p>
+                <button
+                  class="btn btn-primary w-100"
+                  onclick="openClothModal('<%= cloth.title %>', '<%= cloth.category %>', '<%= cloth.price %>', '<%= cloth.image %>', '<%= cloth._id %>')"
+                >
+                  <i class="fas fa-eye me-1"></i>View Details
+                </button>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+
+        <!-- Pagination Controls -->
+        <nav aria-label="Clothes Page Navigation">
+          <ul class="pagination justify-content-center mt-4">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+              <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
+            </li>
+            <% } %>
+          </ul>
+        </nav>
+      </div>
+    </section>
+
+    <!-- Cloth Modal -->
+    <div class="modal fade" id="clothModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalClothTitle">Clothing Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-4">
+                <img
+                  id="modalClothImage"
+                  src=""
+                  alt="Clothing Item"
+                  class="img-fluid rounded"
+                />
+              </div>
+              <div class="col-md-8">
+                <div class="cloth-info">
+                  <h3 id="modalTitle"></h3>
+                  <p id="modalCategory" class="badge bg-secondary"></p>
+                  <p id="modalPrice" class="h4 text-primary"></p>
+
+                  <div class="quantity-selector">
+                    <button class="quantity-btn" onclick="updateQuantity(-1)">
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      id="quantity"
+                      class="form-control"
+                      value="1"
+                      min="1"
+                      max="99"
+                      style="width: 80px"
+                    />
+                    <button class="quantity-btn" onclick="updateQuantity(1)">
+                      +
+                    </button>
+                  </div>
+
+                  <div class="total-price h5 mb-3">
+                    Total:
+                    <span id="modalTotalPrice" class="text-success"></span>
+                  </div>
+
+                  <% if (user) {%>
+                  <button
+                    class="btn btn-success btn-lg w-100"
+                    onclick="addToCart()"
+                  >
+                    <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                  </button>
+                  <% }%>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %> <%- include('partials/auth-modals') %>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script>
+      // Wait for the DOM to be fully loaded
+      window.addEventListener("load", function () {
+        // Get all required elements
+        const searchInput = document.getElementById("searchInput");
+        const categoryFilter = document.getElementById("categoryFilter");
+        const clothesGrid = document.getElementById("clothesGrid");
+        const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+        // Only proceed if we have all required elements
+        if (
+          !searchInput ||
+          !categoryFilter ||
+          !clothesGrid ||
+          !clearFiltersBtn
+        ) {
+          console.error(
+            "Some required elements were not found. Please check the page structure."
+          );
+          return;
+        }
+
+        function filterClothes() {
+          const searchTerm = searchInput.value.toLowerCase().trim();
+          const selectedCategory = categoryFilter.value.toLowerCase();
+          const clothes = document.querySelectorAll(".cloth-card");
+
+          let visibleCount = 0;
+
+          clothes.forEach((cloth) => {
+            const title = cloth.querySelector("h5").textContent.toLowerCase();
+            const category = cloth
+              .querySelector(".category-label")
+              .textContent.toLowerCase();
+            const clothCategory = cloth.dataset.category.toLowerCase();
+
+            const matchesSearch =
+              searchTerm === "" ||
+              title.includes(searchTerm) ||
+              category.includes(searchTerm);
+
+            const matchesCategory =
+              selectedCategory === "all" || clothCategory === selectedCategory;
+
+            if (matchesSearch && matchesCategory) {
+              cloth.parentElement.style.display = "block";
+              visibleCount++;
+            } else {
+              cloth.parentElement.style.display = "none";
+            }
+          });
+
+          // Show "no results" message if needed
+          let noResultsMessage = document.getElementById("noResultsMessage");
+          if (visibleCount === 0) {
+            if (!noResultsMessage) {
+              noResultsMessage = document.createElement("div");
+              noResultsMessage.id = "noResultsMessage";
+              noResultsMessage.className = "text-center my-4";
+              noResultsMessage.innerHTML = `
+                <h4>No clothes found</h4>
+                <p class="text-muted">Try adjusting your search or filter criteria</p>
+              `;
+              clothesGrid.appendChild(noResultsMessage);
+            }
+          } else {
+            if (noResultsMessage) {
+              noResultsMessage.remove();
+            }
+          }
+        }
+
+        // Add event listeners only if elements exist
+        if (searchInput) {
+          searchInput.addEventListener("input", function (e) {
+            filterClothes();
+          });
+        }
+
+        if (categoryFilter) {
+          categoryFilter.addEventListener("change", function (e) {
+            filterClothes();
+          });
+        }
+
+        if (clearFiltersBtn) {
+          clearFiltersBtn.addEventListener("click", function () {
+            searchInput.value = "";
+            categoryFilter.value = "all";
+            filterClothes();
+          });
+        }
+
+        // Initial filter to ensure proper state
+        filterClothes();
+      });
+
+      let currentPrice = 0;
+
+      // Smooth scroll function
+      function scrollToClothes() {
+        document.getElementById("featured-clothes").scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+
+      // Handle explore link click
+      document
+        .getElementById("exploreLink")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          scrollToClothes();
+        });
+
+      // Category filtering
+      document.querySelectorAll(".dropdown-menu a").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const category = this.getAttribute("href").replace("#", "");
+          filterClothes(category);
+          scrollToClothes();
+        });
+      });
+
+      function filterClothes(category) {
+        const clothes = document.querySelectorAll(".cloth-card");
+        clothes.forEach((cloth) => {
+          if (category === "all" || cloth.dataset.category === category) {
+            cloth.parentElement.style.display = "block";
+          } else {
+            cloth.parentElement.style.display = "none";
+          }
+        });
+      }
+
+      // Open cloth modal
+      function openClothModal(title, category, price, image, clothId) {
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalCategory").textContent = category;
+        document.getElementById("modalPrice").textContent = price + "$";
+        document.getElementById("modalClothImage").src = image;
+        document.getElementById("quantity").value = 1;
+
+        // Store clothId in modal
+        document.getElementById("clothModal").dataset.clothId = clothId;
+
+        currentPrice = parseFloat(price.replace("$", ""));
+        updateTotalPrice();
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("clothModal")
+        );
+        modal.show();
+      }
+
+      // Update quantity
+      function updateQuantity(change) {
+        const quantityInput = document.getElementById("quantity");
+        let quantity = parseInt(quantityInput.value) + change;
+
+        if (quantity < 1) quantity = 1;
+        if (quantity > 99) quantity = 99;
+
+        quantityInput.value = quantity;
+        updateTotalPrice();
+      }
+
+      // Update total price
+      function updateTotalPrice() {
+        const quantity = parseInt(document.getElementById("quantity").value);
+        const total = (currentPrice * quantity).toFixed(2);
+        document.getElementById("modalTotalPrice").textContent = "$" + total;
+      }
+
+      // Add to cart function
+      async function addToCart() {
+        const title = document.getElementById("modalTitle").textContent;
+        const quantity = parseInt(document.getElementById("quantity").value);
+
+        // Find cloth ID from dataset (you need to pass it from server to modal)
+        const clothId = document.getElementById("clothModal").dataset.clothId;
+
+        if (!clothId) {
+          alert("Cloth ID is missing.");
+          return;
+        }
+
+        try {
+          const res = await fetch("/api/user/cart", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ clothId, quantity }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            alert(`Added ${quantity} item(s) of "${title}" to cart!`);
+            window.location = "/";
+          } else {
+            alert("Error: " + data.error);
+          }
+        } catch (err) {
+          console.error("Cart error:", err);
+          alert("Something went wrong while adding to cart.");
+        }
+      }
+
+      // Newsletter subscription
+      function handleNewsletter(event) {
+        event.preventDefault();
+        const input = event.target.querySelector("input");
+        const button = event.target.querySelector("button");
+        const originalHTML = button.innerHTML;
+
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        button.disabled = true;
+
+        setTimeout(() => {
+          alert("Thank you for subscribing to our newsletter!");
+          input.value = "";
+          button.innerHTML = originalHTML;
+          button.disabled = false;
+        }, 2000);
+
+        return false;
+      }
+
+      // Update quantity when input changes
+      document
+        .getElementById("quantity")
+        .addEventListener("change", updateTotalPrice);
+    </script>
+  </body>
+</html>
